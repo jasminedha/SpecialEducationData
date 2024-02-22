@@ -1,0 +1,53 @@
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import java.io.IOException;
+
+public class SpecialEducationData {
+    public static void main(String[] args) {
+        String url = "https://dq.cde.ca.gov/dataquest/DQCensus/SPEDEnrLevels.aspx?cds=00&agglevel=State&year=2022-23&ListReportRows=Yr&charter=All&Display=Pct&ro=1&ro=y";
+
+        try {
+            // Connect to the website and fetch the HTML content
+            Document doc = Jsoup.connect(url).get();
+
+            // Find the table containing the data
+            Element table = doc.select("table").first();
+
+            // Find all rows in the table
+            Elements rows = table.select("tr");
+
+            // Skip the first row (header row)
+            for (int i = 1; i < rows.size(); i++) {
+                Element row = rows.get(i);
+
+                // Find the cells in the row
+                Elements cells = row.select("td");
+
+                // Extract data from the cells
+                String county = cells.get(0).text();
+                String enrollment = cells.get(1).text();
+                String regularClass80 = cells.get(2).text();
+                String regularClass40To79 = cells.get(3).text();
+                String regularClass39OrLess = cells.get(4).text();
+                String separateSchoolAndOtherSettings = cells.get(5).text();
+                String preschoolSetting = cells.get(6).text();
+                String missingUnknown = cells.get(7).text();
+
+                // Print the data for each county
+                System.out.println("County: " + county);
+                System.out.println("Enrollment: " + enrollment);
+                System.out.println("Regular Class 80% or More of the Day: " + regularClass80);
+                System.out.println("Regular Class 40 to 79% of the Day: " + regularClass40To79);
+                System.out.println("Regular Class 39% or Less of the Day: " + regularClass39OrLess);
+                System.out.println("Separate School & Other Settings: " + separateSchoolAndOtherSettings);
+                System.out.println("Preschool Setting: " + preschoolSetting);
+                System.out.println("Missing/Unknown: " + missingUnknown);
+                System.out.println();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
